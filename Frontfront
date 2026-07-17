@@ -1,2 +1,408 @@
 //yey codam
 //intradevarr >:D
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>AquaGrow</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #eef5fc;
+    color: #0c243f;
+    display: flex;
+    justify-content: center;
+  }
+  .phone {
+    width: 420px;
+    min-height: 100vh;
+    background: #eef5fc;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ================= HEADER / HERO ================= */
+  .hero {
+    background: linear-gradient(180deg, #d9ecfb 0%, #eef5fc 100%);
+    padding: 24px 24px 20px;
+    text-align: center;
+    position: relative;
+  }
+  .hero .greeting {
+    text-align: left;
+    font-size: 13px;
+    color: #4a6a8a;
+  }
+  .hero .title {
+    text-align: left;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0c243f;
+    margin-bottom: 4px;
+  }
+
+  /* =====================================================
+     🌱 ZONA DE ANIMAȚIE A PLANTEI (TRIFOI) — MODIFICĂ AICI
+     =====================================================
+     - .clover-pot          -> containerul întregului ghiveci
+     - .clover-stem         -> tulpina (poți schimba înălțimea/culoarea)
+     - .clover-leaf         -> fiecare foaie de trifoi (sunt 3, poziționate cu rotate())
+     - @keyframes sway      -> mișcarea de balans a plantei (schimbă aici tipul de animație)
+     - .clover-face         -> fețișoara zâmbitoare de pe frunza din mijloc
+     Pentru a schimba viteza: modifică "3s" din "animation: sway 3s ..."
+     Pentru a schimba tipul de mișcare: rescrie regulile din @keyframes sway
+  ===================================================== */
+  .clover-pot {
+    width: 140px;
+    margin: 8px auto 0;
+    position: relative;
+    height: 150px;
+  }
+  .clover-stem {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    width: 6px;
+    height: 55px;
+    background: #2fa86b;
+    border-radius: 3px;
+    transform-origin: bottom center;
+    transform: translateX(-50%);
+    animation: sway 3s ease-in-out infinite;
+  }
+  .clover-leaves {
+    position: absolute;
+    bottom: 88px;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    transform: translateX(-50%);
+    transform-origin: bottom center;
+    animation: sway 3s ease-in-out infinite;
+  }
+  .clover-leaf {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: #34b370;
+    border-radius: 100% 0 100% 100%;
+    top: 18px;
+    left: 19px;
+  }
+  .clover-leaf.l1 { transform: rotate(0deg) translate(-10px, -18px); }
+  .clover-leaf.l2 { transform: rotate(120deg) translate(-10px, -18px); }
+  .clover-leaf.l3 { transform: rotate(240deg) translate(-10px, -18px); }
+  .clover-face {
+    position: absolute;
+    top: 24px;
+    left: 25px;
+    font-size: 13px;
+  }
+  .pot {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 72px;
+    height: 42px;
+    background: #b5734a;
+    border-radius: 0 0 14px 14px;
+    clip-path: polygon(8% 0, 92% 0, 100% 100%, 0% 100%);
+  }
+  @keyframes sway {
+    0%, 100% { transform: translateX(-50%) rotate(-4deg); }
+    50%      { transform: translateX(-50%) rotate(4deg); }
+  }
+  .clover-leaves { transform-origin: bottom center; }
+  /* ================= FIN ZONĂ ANIMAȚIE ================= */
+
+  .weather {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #33526f;
+  }
+  .status-hint {
+    font-size: 13px;
+    color: #6b88a3;
+    margin-top: 2px;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fce7c2;
+    color: #8a5c12;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+
+  /* ================= WATER CARD ================= */
+  .card {
+    background: #ffffff;
+    margin: 16px 20px 0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 10px rgba(20,70,120,0.06);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #33526f;
+    font-weight: 600;
+  }
+  .today-badge {
+    background: #e3f0fd;
+    color: #1a6fc4;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  .liters {
+    font-size: 32px;
+    font-weight: 800;
+    margin-top: 6px;
+    color: #0c243f;
+  }
+  .liters span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #6b88a3;
+  }
+  .goal-row {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 12px;
+    color: #6b88a3;
+    margin-top: -4px;
+  }
+  .bar-track {
+    background: #e5eef6;
+    height: 8px;
+    border-radius: 6px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    background: linear-gradient(90deg, #2f8ee0, #1a6fc4);
+    height: 100%;
+    width: 56%;
+    border-radius: 6px;
+  }
+  .percent-label {
+    font-size: 12px;
+    color: #6b88a3;
+    margin-top: 6px;
+  }
+
+  /* ================= ZONES ================= */
+  .zones-title {
+    margin: 22px 20px 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0c243f;
+  }
+  .zones {
+    display: flex;
+    gap: 12px;
+    margin: 0 20px;
+  }
+  .zone {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 16px 8px;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+  .zone.active {
+    border-color: #1a6fc4;
+  }
+  .zone-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #dbeafb;
+    color: #b7c9db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    margin: 0 auto 8px;
+  }
+  .zone.active .zone-icon {
+    background: #1a6fc4;
+    color: #fff;
+  }
+  .zone-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0c243f;
+  }
+  .zone-status {
+    font-size: 11px;
+    color: #94a9bf;
+    margin-top: 4px;
+  }
+  .zone.active .zone-status {
+    color: #1a6fc4;
+  }
+
+  /* ================= SUMMARY ROW ================= */
+  .summary {
+    display: flex;
+    gap: 12px;
+    margin: 14px 20px 0;
+  }
+  .summary .card {
+    flex: 1;
+    margin: 0;
+    padding: 14px 16px;
+  }
+  .summary-label {
+    font-size: 12px;
+    color: #6b88a3;
+  }
+  .summary-value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+    color: #0c243f;
+  }
+  .summary-sub {
+    font-size: 11px;
+    color: #2f9e5e;
+    margin-top: 2px;
+  }
+
+  /* ================= CTA ================= */
+  .cta {
+    margin: 18px 20px 0;
+    background: linear-gradient(90deg, #2f8ee0, #1a6fc4);
+    color: #fff;
+    text-align: center;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 6px 16px rgba(26,111,196,0.3);
+  }
+
+  /* ================= NAV ================= */
+  .nav {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-around;
+    padding: 14px 0 18px;
+    background: #ffffff;
+    border-top: 1px solid #e5eef6;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #94a9bf;
+  }
+  .nav-item.active {
+    color: #1a6fc4;
+    font-weight: 700;
+  }
+  .nav-dot {
+    width: 20px;
+    height: 3px;
+    border-radius: 3px;
+    background: transparent;
+  }
+  .nav-item.active .nav-dot {
+    background: #1a6fc4;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="hero">
+    <div class="greeting">Bună ziua 👋</div>
+    <div class="title">Grădina mea</div>
+
+    <!-- planta animată -->
+    <div class="clover-pot">
+      <div class="clover-leaves">
+        <div class="clover-leaf l1"></div>
+        <div class="clover-leaf l2"></div>
+        <div class="clover-leaf l3"></div>
+        <div class="clover-face">🙂</div>
+      </div>
+      <div class="clover-stem"></div>
+      <div class="pot"></div>
+    </div>
+
+    <div class="weather">☀️ 24°C · Senin</div>
+    <div class="status-hint">Zonă gata — apasă Pornește</div>
+    <div class="status-pill">⏸ Inactiv</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Consum de apă</span>
+      <span class="today-badge">Astăzi</span>
+    </div>
+    <div class="liters">16.7 <span>L</span></div>
+    <div class="goal-row">/ 30 L țintă</div>
+    <div class="bar-track"><div class="bar-fill"></div></div>
+    <div class="percent-label">56% din ținta zilnică</div>
+  </div>
+
+  <div class="zones-title">Zone</div>
+  <div class="zones">
+    <div class="zone active">
+      <div class="zone-icon">C1</div>
+      <div class="zone-name">Zona A</div>
+      <div class="zone-status">● Pornit</div>
+    </div>
+    <div class="zone">
+      <div class="zone-icon">C2</div>
+      <div class="zone-name">Zona B</div>
+      <div class="zone-status">○ Oprit</div>
+    </div>
+    <div class="zone">
+      <div class="zone-icon">C3</div>
+      <div class="zone-name">Zona C</div>
+      <div class="zone-status">○ Oprit</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="card">
+      <div class="summary-label">Următorul program</div>
+      <div class="summary-value">06:00</div>
+      <div class="zone-status">Mâine · Zona A</div>
+    </div>
+    <div class="card">
+      <div class="summary-label">Săptămâna aceasta</div>
+      <div class="summary-value">121.2 L</div>
+      <div class="summary-sub">↓ 8% vs săptămâna trecută</div>
+    </div>
+  </div>
+
+  <div class="cta">▶ Pornește</div>
+
+  <div class="nav">
+    <div class="nav-item active">🏠<span>Acasă</span><div class="nav-dot"></div></div>
+    <div class="nav-item">🗺️<span>Grădină</span><div class="nav-dot"></div></div>
+    <div class="nav-item">📊<span>Statistici</span><div class="nav-dot"></div></div>
+    <div class="nav-item">⏰<span>Program</span><div class="nav-dot"></div></div>
+    <div class="nav-item">⚙️<span>Setări</span><div class="nav-dot"></div></div>
+  </div>
+
+</div>
+</body>
+</html>
